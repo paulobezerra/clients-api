@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +21,8 @@ import java.util.Set;
 @PrimaryKeyJoinColumn(name = "person_id")
 @EqualsAndHashCode(callSuper=false)
 public class LegalPerson extends Person {
+    @Column(nullable = false)
+    private LocalDate openingDate;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -39,5 +44,16 @@ public class LegalPerson extends Person {
         legalPerson.setType(PersonTypeEnum.LEGAL);
         legalPerson.contacts = new HashSet<>();
         return legalPerson;
+    }
+
+    @Override
+    public String getDocument() {
+        return this.cnpj;
+    }
+
+    @Override
+    public Integer getAge() {
+        LocalDate current = LocalDate.now();
+        return Period.between(this.openingDate, current).getDays();
     }
 }

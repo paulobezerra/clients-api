@@ -44,4 +44,8 @@ public abstract class Person {
     public void addPhone(Phone phone) {
         this.phones.add(phone);
     }
+
+    public abstract String getDocument();
+
+    public abstract Integer getAge();
 }

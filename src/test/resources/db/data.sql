@@ -19,8 +19,8 @@ values (2, 'LEGAL', 'CLIENT', 'ACME Inc.', 1);
 insert into natural_people (person_id, birth_date, gender, marital_status, spouse_name, mother_name, father_name, rg, cpf)
 values (1, now(), 'MALE', 'MARRIED', 'Rose Doe', 'Mary Doe', 'Bob Doe', '1234565', '12345678912');
 
-insert into legal_people (person_id, ie, cnpj)
-values (2, '1234565', '12345678912');
+insert into legal_people (person_id, opening_date, ie, cnpj)
+values (2, now(), '1234565', '12345678912');
 
 insert into contacts (legal_person_id, natural_person_id)
 values (2, 1);

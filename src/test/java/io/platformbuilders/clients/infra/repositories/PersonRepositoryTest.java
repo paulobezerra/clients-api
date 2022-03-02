@@ -9,8 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -56,7 +60,7 @@ class PersonRepositoryTest {
         naturalPerson.setCategory(PersonCategoryEnum.CLIENT);
         naturalPerson.setName("Joe Doe");
         naturalPerson.setAddress(address);
-        naturalPerson.setBirthDate(new Date());
+        naturalPerson.setBirthDate(LocalDate.of(1986, 3, 24));
         naturalPerson.setGender(GenderEnum.MALE);
         naturalPerson.setMaritalStatus(MaritalStatusEnum.MARRIED);
         naturalPerson.setSpouseName("Rose Doe");
@@ -67,6 +71,7 @@ class PersonRepositoryTest {
 
         this.legalPerson = LegalPerson.create();
         legalPerson.setName("ACME Inc.");
+        legalPerson.setOpeningDate(LocalDate.of(2019, 12, 26));
         legalPerson.setAddress(address);
         legalPerson.addContact(naturalPerson);
         legalPerson.setCnpj("123456789123456");
@@ -146,6 +151,14 @@ class PersonRepositoryTest {
         assertEquals("St Angel", people.get(1).getAddress().getPublicPlace());
         assertTrue(people.get(1).getPhones().stream().findFirst().isPresent());
         assertEquals("Telemarketing", people.get(1).getPhones().stream().findFirst().get().getType());
+    }
+
+    @Test
+    void mustReturnPeopleByNameAndByCity() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Person> people = this.personRepository.findByNameByDocumentAndByCity(null, "Campo Grande", pageable);
+        assertNotNull(people);
+        assertEquals(2, people.getTotalElements());
     }
 
 }

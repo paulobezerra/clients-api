@@ -9,6 +9,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 
 @Entity
@@ -19,7 +21,8 @@ import java.util.Date;
 @PrimaryKeyJoinColumn(name = "person_id")
 @EqualsAndHashCode(callSuper=false)
 public class NaturalPerson extends Person {
-    private Date birthDate;
+    @Column(nullable = false)
+    private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
@@ -36,5 +39,16 @@ public class NaturalPerson extends Person {
         NaturalPerson naturalPerson = new NaturalPerson();
         naturalPerson.setType(PersonTypeEnum.NATURAL);
         return naturalPerson;
+    }
+
+    @Override
+    public String getDocument() {
+        return this.cpf;
+    }
+
+    @Override
+    public Integer getAge() {
+        LocalDate current = LocalDate.now();
+        return Period.between(this.birthDate, current).getDays();
     }
 }
